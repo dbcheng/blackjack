@@ -5,10 +5,14 @@ cc_library(
     hdrs = ["deck.h"],
 )
 
+cc_library(
+    name = "hand",
+    hdrs = ["hand.h"],
+)
 
 cc_binary(
     name = "blackjack",
     srcs = ["blackjack.cc"],
-    deps = [":deck"],
+    deps = [":deck", ":hand"],
 )
 

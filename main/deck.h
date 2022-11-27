@@ -36,9 +36,9 @@ struct Card {
     int value;
     std::string suit;
 
-    std::string Display() {
+    std::string Display() const{
         std::stringstream s;
-        s << rank << " " << suit;
+        s << rank << " of " << suit;
         return s.str();
     }
 };
@@ -51,11 +51,13 @@ class Deck {
                  cards_.push_back(Card{.rank=rank, .value=value, .suit=suit});
              }
          }
-        auto rng = std::default_random_engine {};
+        auto rd = std::random_device {};
+        auto rng = std::default_random_engine { rd() };
         std::shuffle(std::begin(cards_), std::end(cards_), rng);
+        init_size_ = cards_.size();
      };
 
-     int Size() {
+     int Size() const {
          return cards_.size();
      }
 
@@ -74,12 +76,16 @@ class Deck {
          }
          used_cards_.clear();
          assert(used_cards_.empty());
-         assert(cards_.size() == 52);
+         assert((int)cards_.size() == init_size_);
      }
 
-     std::string Display() {
+     int InitSize() const {
+         return init_size_;
+     };
+
+     std::string Display() const {
         std::stringstream result;
-        for (int i = 0; i < cards_.size(); i++) {
+        for (int i = 0; i < (int)cards_.size(); i++) {
             result << "Card " << i+1 << ": "<< cards_[i].Display() << std::endl;
         }
         return result.str();
@@ -88,5 +94,6 @@ class Deck {
  private:
      std::vector<Card> cards_;
      std::vector<Card> used_cards_;
+     int init_size_;
 
 };
